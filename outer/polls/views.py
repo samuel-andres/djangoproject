@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
+from django.utils import timezone
 
 
 from .models import Question, Choice
@@ -38,21 +39,52 @@ esto es, cada vista es una una función dentro de views.py
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.htm'
+    '''por defecto el context_object_name es el nombre del modelo en minúscula underscore
+    list'''
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
         """Return the last five published questions."""
-        return Question.objects.order_by('-pub_date')[:5]
+        '''Question.objects.filter(pub_date__lte=timezone.now()) returns a queryset containing Questions whose pub_date is less than or equal to - that is, earlier than or equal to - timezone.now.'''
+        questions_with_at_lest_one_choice = Question.objects.filter(pk__in=[choice.question.pk for choice in Choice.objects.all()])
+        '''
+        for question in Question.objects.all():
+            for choice in Choice.objects.all():
+                if question.pk in choice.question.pk:
+                    return True
+        '''
+
+        last_5_questions = questions_with_at_lest_one_choice.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+
+
+        return last_5_questions
+
+
+
 
 
 class DetailView(generic.DetailView):
+    ''' por defect el template_name es el nombre del modelo en minúscula underscore
+    detail.html'''
     model = Question
     template_name = 'polls/detail.htm'
+
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.htm'
+
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())    
 
 def vote(request, question_id):
     '''as a parameters takes a request object and a question_id from the url
