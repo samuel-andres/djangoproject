@@ -1,0 +1,16 @@
+.mytitle {
+    color:green;
+    font-weight: bold;
+    font-size: xx-large;
+    text-align: center;
+}
+
+.mydesc {
+    color:blueviolet;
+    font-weight: bold;
+    text-align: center;
+}
+
+body {
+    background: white url("images/hasbulla.gif") repeat;
+}

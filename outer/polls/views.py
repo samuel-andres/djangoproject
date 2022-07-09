@@ -48,10 +48,8 @@ class IndexView(generic.ListView):
         '''Question.objects.filter(pub_date__lte=timezone.now()) returns a queryset containing Questions whose pub_date is less than or equal to - that is, earlier than or equal to - timezone.now.'''
         questions_with_at_lest_one_choice = Question.objects.filter(pk__in=[choice.question.pk for choice in Choice.objects.all()])
         '''
-        for question in Question.objects.all():
-            for choice in Choice.objects.all():
-                if question.pk in choice.question.pk:
-                    return True
+        the list comprehension above return a list of question pk's of every single question asociated with
+        a choice
         '''
 
         last_5_questions = questions_with_at_lest_one_choice.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]

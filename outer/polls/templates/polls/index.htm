@@ -1,7 +1,16 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+{% load static %}
+
+<link rel=stylesheet type="text/css" href="{% static 'polls/bootstrap/bootstrap.css' %}">" 
+<br>
+
 <div class="col d-flex justify-content-center">
 <div class="p-3 mb-2 bg-white text-dark">
 
+<p class="mytitle">POLLS APP</p>
+<p class="mydesc">This APP was made following the <a href="https://www.djangoproject.com/" class="mydesc">DjangoProject</a> tutorial</p>
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
 {% if latest_question_list %}
     
     <ul class="list-group">
@@ -14,12 +23,12 @@
             </div>
         </li>
     {% endfor %}
-    </ul>
-    <img src="https://www.metroworldnews.com/resizer/txczNNHfsqinSs4WX86ZoDGjsiQ=/800x0/filters:format(jpg):quality(70)/cloudfront-us-east-1.images.arcpublishing.com/metroworldnews/DKJN7STOHJHAPDR56UN2N2Z4FI.jpeg" alt="" class="img-thumbnail">
-    
+    </ul>´
+    <img src="{% static '/polls/images/hasbu.jpeg' %}" alt="" class="img-thumbnail"> 
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+
 
 </div>
 </div>
