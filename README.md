@@ -1,4 +1,6 @@
-# Primer proyecto en Django siguiendo la documentación oficial
+# README.md
+
+En el repo está todo lo que hice para crear la polls app de la documeantación oficial de Django más un par de cosas más que le agregué, y dejo las instrucciones de como desplegarla en docker con postgres en un servidor linux.
 
 ## deployment en docker
 
