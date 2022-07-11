@@ -1,6 +1,6 @@
 import datetime
 from pydoc import describe
-from xmlrpc.client import boolean
+# from xmlrpc.client import boolean
 
 from django.db import models
 from django.utils import timezone
@@ -14,7 +14,7 @@ class Question(models.Model):
     def __str__(self) -> str:
         return self.question_text
 
-
+    
     @admin.display(
         boolean=True,
         ordering='pub_date',
