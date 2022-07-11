@@ -77,3 +77,16 @@ Para que esto funcione tenemos que importar os al principio del archivo. Y eso e
 python3 manage.py createsuperuser
 ```
 Con el usuario que creemos tenemos acceso al admin panel de la aplicación y todo lo que generemos en al db va a tener persistencia en nuestro sv. Más adelante voy a ver si puedo hacer que se cree un superuser por defecto o con un par de variables de entorno que se pasen en el docker compose yaml pero por ahora eso es todo.
+
+
+Para que django sirva los archivos estáticos con el debug desactivado hay que agregar la opción --insecure (dependiendo su deployment puede no ser lo más recomendable pero si lo corren sobre un proxy reverso de apache o ngninx no pasa nada)
+```
+command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000 --insecure"
+```
+
+
+Para aceptar POST requests si usan un reverse proxy que traduce https a http tienen que configurar en setting.py
+```
+CSRF_TRUSTED_ORIGINS = ["https://yourdomain.com", "https://www.yourdomain.com"]
+```
+si no tira error de cross site request forgery
