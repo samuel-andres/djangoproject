@@ -1,8 +1,9 @@
-from django.http import HttpResponseRedirect
+from re import template
+from django.http import HttpResponse, HttpResponseRedirect
 # from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views import generic
+from django.views import View, generic
 from django.utils import timezone
 
 
@@ -37,27 +38,53 @@ esto es, cada vista es una una función dentro de views.py
 #     return render(request, 'polls/results.htm', {'question': question})
 
 
-class IndexView(generic.ListView):
+# class IndexView(generic.ListView):
+#     template_name = 'polls/index.htm'
+#     '''por defecto el context_object_name es el nombre del modelo en minúscula underscore
+#     list'''
+#     context_object_name = 'latest_question_list'
+
+#     def get_queryset(self):
+#         """Return the last five published questions."""
+#         '''Question.objects.filter(pub_date__lte=timezone.now()) returns a queryset containing Questions whose pub_date is less than or equal to - that is, earlier than or equal to - timezone.now.'''
+#         questions_with_at_lest_one_choice = Question.objects.filter(pk__in=[choice.question.pk for choice in Choice.objects.all()])
+#         '''
+#         the list comprehension above return a list of question pk's of every single question asociated with
+#         a choice
+#         '''
+
+#         last_5_questions = questions_with_at_lest_one_choice.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+
+
+#         return last_5_questions
+
+
+
+class IndexView(View):
     template_name = 'polls/index.htm'
     '''por defecto el context_object_name es el nombre del modelo en minúscula underscore
     list'''
-    context_object_name = 'latest_question_list'
+    # context_object_name = 'latest_question_list'
 
-    def get_queryset(self):
-        """Return the last five published questions."""
-        '''Question.objects.filter(pub_date__lte=timezone.now()) returns a queryset containing Questions whose pub_date is less than or equal to - that is, earlier than or equal to - timezone.now.'''
-        questions_with_at_lest_one_choice = Question.objects.filter(pk__in=[choice.question.pk for choice in Choice.objects.all()])
-        '''
-        the list comprehension above return a list of question pk's of every single question asociated with
-        a choice
-        '''
-
-        last_5_questions = questions_with_at_lest_one_choice.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+    questions_with_at_lest_one_choice = Question.objects.filter(pk__in=[choice.question.pk for choice in Choice.objects.all()])
+    latest_question_list = questions_with_at_lest_one_choice.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+    context = {
+        'latest_question_list': latest_question_list,
+    }
 
 
-        return last_5_questions
+    def get(self, request):
+        # self.context['ip'] = request.META.get("REMOTE_ADDR")
+        # print(request.META.get("REMOTE_ADDR"))
 
+        # num_visits = request.session.get('num_visits',0) + 1
+        # request.session['num_visits'] = num_visits
+        # if num_visits > 4: del(request.session['num_visits'])
+        # print(num_visits)
 
+        # self.context['visitas'] = num_visits
+        
+        return render(request, 'polls/index.htm',self.context)
 
 
 
@@ -111,3 +138,11 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+
+def sessfun(request):
+    num_visits = request.session.get('num_visits',0) + 1
+    request.session['num_visits'] = num_visits
+    if num_visits > 4: del(request.session['num_visits'])
+    print(num_visits)
+    return HttpResponse('view count='+str(num_visits))

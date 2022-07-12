@@ -23,7 +23,9 @@
             </div>
         </li>
     {% endfor %}
-    </ul>´
+    </ul>
+    {% comment %} <p> {{ ip }} </p> {% endcomment %}
+    <p> Hoy visitaste la página {{visitas}} veces </p>
     <img src="{% static '/polls/images/hasbu.jpeg' %}" alt="" class="img-thumbnail"> 
 {% else %}
     <p>No polls are available.</p>
