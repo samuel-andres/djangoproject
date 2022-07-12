@@ -1,8 +1,9 @@
 version: "3.9"
    
 services:
-  db:
+  pollsdb:
     image: postgres
+    container_name: pollsdb
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
@@ -10,10 +11,10 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - 5433:5433
-  web:
-    build: .
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+      - 5433:5432
+  pollsweb:
+    image: samucancld/pollsapp:1.2
+    container_name: pollsweb
     volumes:
       - .:/code
     ports:
@@ -22,5 +23,14 @@ services:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - DB_ALIAS=pollsdb
+      - LOCAL_HOST=localhost # private ip
+      - PUBLIC_DOMAIN=yourdomain #public ip or public domain
+      - SEC_PUBLIC_DOMAIN=yourseconddomain # another domain, optional
+      - TZ=yourtimezone
     depends_on:
-      - db
+      - pollsdb
+networks:
+  default:
+    name: nginxpm_default
+    external: true
