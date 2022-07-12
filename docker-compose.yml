@@ -1,0 +1,36 @@
+version: "3.9"
+   
+services:
+  pollsdb:
+    image: postgres
+    container_name: pollsdb
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5433:5432
+  pollsweb:
+    image: samucancld/pollsapp:1.2
+    container_name: pollsweb
+    volumes:
+      - .:/code
+    ports:
+      - "7777:8000"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DB_ALIAS=pollsdb
+      - LOCAL_HOST=localhost # private ip
+      - PUBLIC_DOMAIN=yourdomain #public ip or public domain
+      - SEC_PUBLIC_DOMAIN=yourseconddomain # another domain, optional
+      - TZ=yourtimezone
+    depends_on:
+      - pollsdb
+networks:
+  default:
+    name: nginxpm_default
+    external: true
