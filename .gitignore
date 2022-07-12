@@ -62,3 +62,4 @@ docs/_build/
 target/
 
 ./outer/mysite/settings.py
+outer/mysite/settings.py
